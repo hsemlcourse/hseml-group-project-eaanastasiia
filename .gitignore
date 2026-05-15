@@ -54,13 +54,12 @@ data/processed/*.npz
 # =============================================================================
 # Models — large binary files
 # =============================================================================
-models/*.pkl
-models/*.joblib
 models/*.h5
 models/*.pt
 models/*.pth
 models/*.onnx
 !models/.gitkeep
+# .pkl и .joblib коммитим — модели маленькие (<5 MB), нужны для FastAPI
 
 # =============================================================================
 # Reports — figures are regenerated, but keep CSV

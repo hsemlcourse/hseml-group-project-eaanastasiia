@@ -54,8 +54,8 @@
 ├── notebooks
 │   ├── 00_data_collection.ipynb   # Парсинг + Feature Engineering + Preprocessing
 │   ├── 01_eda.ipynb               # Разведочный анализ данных (EDA)
-│   ├── 02_baseline.ipynb          # Baseline-модели
-│   └── 03_experiments.ipynb       # Эксперименты и ablation study
+│   ├── 02_baseline.ipynb          # Baseline-модели (Majority Class, Logistic Regression)
+│   └── 03_experiments.ipynb       # Эксперименты: RF, LightGBM, Optuna, ablation study
 ├── presentation                    # Презентация для защиты
 ├── report
 │   ├── images                     # Графики для отчёта
@@ -64,9 +64,12 @@
 │   ├── __init__.py
 │   ├── parsers.py                 # Парсинг Understat + FBref (soccerdata)
 │   ├── features.py                # Feature Engineering (xG, форма, Elo, H2H)
-│   └── preprocessing.py           # Предобработка + темпоральный сплит
+│   ├── preprocessing.py           # Предобработка + темпоральный сплит
+│   └── models.py                  # Утилиты оценки и визуализации моделей
 ├── tests
 │   └── test.py                    
+├── Dockerfile
+├── docker-compose.yml
 ├── requirements.txt
 └── README.md
 ```
@@ -113,6 +116,8 @@
 
 ## Запуск
 
+### Локально
+
 ```bash
 # 1. Клонировать репозиторий
 git clone <url>
@@ -131,16 +136,33 @@ jupyter nbconvert --to notebook --execute notebooks/00_data_collection.ipynb
 
 # 5. EDA
 jupyter nbconvert --to notebook --execute notebooks/01_eda.ipynb
+
+# 6. Baseline-модели
+jupyter nbconvert --to notebook --execute notebooks/02_baseline.ipynb
+
+# 7. Эксперименты и финальная модель
+jupyter nbconvert --to notebook --execute notebooks/03_experiments.ipynb
+```
+
+### Через Docker
+
+```bash
+docker-compose up --build
+# Jupyter доступен на http://localhost:8888
 ```
 
 ---
 
 ## Результаты
 
-| Модель | Weighted F1 | Accuracy | Примечание |
-|--------|-------------|----------|------------|
-| Baseline (majority class) | — | ~45% | Всегда предсказывает H |
-| Лучшая модель | — | — | Заполняется в CP2 |
+| Модель | Weighted F1 (val) | Accuracy (val) | Weighted F1 (test) | Примечание |
+|--------|-------------------|----------------|--------------------|------------|
+| Majority Class (baseline) | 0.3014 | 0.4708 | 0.2793 | Всегда предсказывает H |
+| Logistic Regression | 0.4724 | 0.5375 | 0.4314 | Стандартизация + L2 |
+| LightGBM (default) | 0.4692 | 0.4833 | — | 300 итераций |
+| Random Forest (default) | 0.5032 | 0.5500 | — | 200 деревьев |
+| LightGBM (tuned) | 0.5175 | 0.5667 | — | Optuna, 30 trials |
+| **Random Forest (tuned)** | **0.5217** | **0.5750** | **0.4609** | **Лучшая модель, Optuna 30 trials** |
 
 ---
 

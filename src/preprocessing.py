@@ -56,7 +56,6 @@ def remove_duplicates(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def impute_features(df: pd.DataFrame) -> pd.DataFrame:
-    # NaN values arise at the start of seasons when rolling windows have insufficient history.
     imputer = SimpleImputer(strategy="median")
     df = df.copy()
     df[FEATURE_COLS] = imputer.fit_transform(df[FEATURE_COLS])
