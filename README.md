@@ -70,6 +70,7 @@
 │   └── test.py                    
 ├── Dockerfile
 ├── docker-compose.yml
+├── Makefile
 ├── requirements.txt
 └── README.md
 ```
@@ -149,6 +150,13 @@ jupyter nbconvert --to notebook --execute notebooks/03_experiments.ipynb
 ```bash
 docker-compose up --build
 # Jupyter доступен на http://localhost:8888
+```
+
+### Линтеры
+
+```bash
+make lint      # ruff + flake8 проверка src/
+make format    # авто-форматирование ruff
 ```
 
 ---
